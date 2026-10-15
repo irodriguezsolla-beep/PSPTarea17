@@ -2,12 +2,12 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Contador_de_caracteres {
-    public static <er> void main(){
+     void main(){
         //Pedir consonates
         Scanner scanner = new Scanner(System.in);
         String[] listaconstantes = new String[5];
         for (int i =0; i<5; i++){
-            System.out.println("Di una costante, conatante actual: "+i);
+            System.out.println("Di una costante, conatante actual: "+ i);
             String constante = scanner.nextLine();
             if (constante.length() == 1 && Character.isLetter(constante.charAt(0)) && !"aeiouAEIOU".contains(constante)) {
                 listaconstantes[i] = constante;
@@ -38,7 +38,7 @@ public class Contador_de_caracteres {
 
         try (DataInputStream leer = new DataInputStream(new FileInputStream(texto))) {
             int byteLeido;
-            // read() devuelve -1 cuando llega al final del archivo (EOF)
+            // read() devuelve -1 cuando llega al final del archivo
             while ((byteLeido = leer.read()) != -1) {
                 contenido.append((char) byteLeido);
             }
