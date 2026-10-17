@@ -2,6 +2,49 @@
 
 ## Escribe un programa que pida por teclado 5 consonantes y un texto. Cada consonante tendrá un hilo que cuenta cuántas veces aparece una de las consonantes y suma sus apariciones a un contador total compartido. Al final se muestra lo que ha contado cada hilo y el total.
 
+### Clase hilo_contador
+Para la clase del hilo, creo una clase llamada `hilo_contador` que extiende de `Thread`. Dentro de esta clase defino tres variables: `texto` para guardar el texto completo, `cons` para la consonante que le toca buscar a este hilo, y `repeticionConstante` para almacenar el resultado del conteo. 
+
+En el constructor recibo la consonante y el texto, uso `super("Contador-" + cons);` para ponerle un nombre identificativo al hilo y guardo los valores en las variables de la clase. El método `run()` contiene el código que se ejecuta de forma independiente cuando arranco el hilo, allí inicializo un contador y una posición a cero, y uso un bucle `while` con `texto.indexOf(cons, posicion)` para buscar la consonante en el texto a partir de la posición actual. Si la encuentra, es decir, si no devuelve `-1`, sumo uno al contador y muevo la posición hacia adelante para seguir buscando la siguiente ocurrencia. Cuando ya no quedan más, guardo el resultado final en `this.repeticionConstante`. 
+
+Por último, defino los métodos getters `getRepeticionConstate` y `getCons`, que los uso para que el programa principal pueda consultar de forma segura el resultado y la letra de cada hilo cuando estos terminen.
+
+````java
+public class hilo_contador extends Thread {
+    String texto;
+    String cons;
+    int repeticionConstante;
+
+    public hilo_contador(String cons, String texto){
+        super("Contador-" + cons);
+        this.cons = cons;
+        this.texto = texto;
+    }
+    @Override
+    public void run(){
+
+        int contador = 0;
+        int posicion = 0;
+
+        while ((posicion = texto.indexOf(cons, posicion)) != -1) {
+            contador++;
+            posicion += cons.length();
+        }
+
+        this.repeticionConstante = contador;
+
+    }
+    public int getRepeticionConstate() {
+        return repeticionConstante;
+    }
+
+    public String getCons() {
+        return cons;
+    }
+}
+````
+![hilos.png](Fotos/hilos.png)
+
 ### Clase contador de caracteres
 
 #### Petición de consonantes
@@ -68,4 +111,4 @@ Por último, una vez que termina de leer todo el archivo, convierto el `StringBu
 ````
 ![Leerhilo.png](Fotos/Leerhilo.png)
 
-
+#### Crear hilos
