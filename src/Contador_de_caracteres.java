@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Contador_de_caracteres {
      void main(){
-        //Pedir consonates
+        //Pedir consonantes
         Scanner scanner = new Scanner(System.in);
         String[] listaconstantes = new String[5];
         for (int i =0; i<5; i++){
@@ -14,9 +14,7 @@ public class Contador_de_caracteres {
             }else{
                 System.out.println("Da un valor valido.");
                 i--;
-                continue;
             }
-            listaconstantes[i] = constante;
         }
 
         //Añadir texto
@@ -25,30 +23,30 @@ public class Contador_de_caracteres {
 
 
         File texto = new File("texto.txt");
-        try(FileWriter apent = new FileWriter(texto, true)){
+        try(FileWriter agregar = new FileWriter(texto)){
 
-            apent.write(text + "\n");
+            agregar.write(text + "\n");
             System.out.println("Texto agregado");
         } catch (IOException e) {
             System.out.println("Error");
         }
 
-        //Leer texto
-        StringBuilder contenido = new StringBuilder();
+         //Leer texto
+         StringBuilder contenido = new StringBuilder();
 
-        try (DataInputStream leer = new DataInputStream(new FileInputStream(texto))) {
-            int byteLeido;
-            // read() devuelve -1 cuando llega al final del archivo
-            while ((byteLeido = leer.read()) != -1) {
-                contenido.append((char) byteLeido);
-            }
-        } catch (IOException e) {
-            System.err.println("Error al leer el archivo: " + e.getMessage());
-        }
+         try (DataInputStream leer = new DataInputStream(new FileInputStream(texto))) {
+             int byteLeido;
+             // read() devuelve -1 cuando llega al final del archivo
+             while ((byteLeido = leer.read()) != -1) {
+                 contenido.append((char) byteLeido);
+             }
+         } catch (IOException e) {
+             System.err.println("Error al leer el archivo: " + e.getMessage());
+         }
 
-        String textoCompleto = contenido.toString();
+         String textoCompleto = contenido.toString();
 
-        //Crear hilos
+         //Crear hilos
         hilo_contador[] hilos = new hilo_contador[5];
 
         for (int i = 0; i < 5; i++) {
