@@ -23,7 +23,7 @@ public class Contador_de_caracteres {
 
 
         File texto = new File("texto.txt");
-        try(FileWriter agregar = new FileWriter(texto,true)){
+        try(FileWriter agregar = new FileWriter(texto)){
 
             agregar.write(text + "\n");
             System.out.println("Texto agregado");
