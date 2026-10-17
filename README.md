@@ -1,6 +1,7 @@
 # Tarea 17 - Contador de caracteres
 
-## Escribe un programa que pida por teclado 5 consonantes y un texto. Cada consonante tendrá un hilo que cuenta cuántas veces aparece una de las consonantes y suma sus apariciones a un contador total compartido. Al final se muestra lo que ha contado cada hilo y el total.
+##
+Escribe un programa que pida por teclado 5 consonantes y un texto. Cada consonante tendrá un hilo que cuenta cuántas veces aparece una de las consonantes y suma sus apariciones a un contador total compartido. Al final se muestra lo que ha contado cada hilo y el total.
 
 ### Clase hilo_contador
 Para la clase del hilo, creo una clase llamada `hilo_contador` que extiende de `Thread`. Dentro de esta clase defino tres variables: `texto` para guardar el texto completo, `cons` para la consonante que le toca buscar a este hilo, y `repeticionConstante` para almacenar el resultado del conteo. 
@@ -112,3 +113,41 @@ Por último, una vez que termina de leer todo el archivo, convierto el `StringBu
 ![Leerhilo.png](Fotos/Leerhilo.png)
 
 #### Crear hilos
+Para poner en marcha la ejecución en paralelo, creo un array de 5 hilos de tipo `hilo_contador` y abro un bucle `for` que se repite 5 veces para recorrer cada posición; en cada vuelta, instancio un nuevo hilo pasándole la consonante correspondiente de mi lista de consonantes y el texto completo, y llamo inmediatamente a su método `.start()` para que Java comience a ejecutarlo de forma independiente y concurrente en segundo plano.
+
+````java
+hilo_contador[] hilos = new hilo_contador[5];
+
+        for (int i = 0; i < 5; i++) {
+            hilos[i] = new hilo_contador(listaconstantes[i], textoCompleto);
+            hilos[i].start();
+        }
+````
+![hilosStart.png](Fotos/hilosStart.png)
+
+#### Suma de caracteres y resultados
+
+Para finalizar, declaro una variable `sumaTotalCaracteres` inicializada a 0 para acumular el resultado global. Después, abro un bucle `for` para recorrer los 5 hilos donde utilizo `hilos[i].join()`, lo cual es fundamental para obligar al programa principal a **esperar** a que cada hilo termine de buscar antes de continuar. Una vez que el hilo finaliza, cojo su resultado con `getRepeticionConstate()` y lo voy sumando a la variable total, protegiendo todo con un bloque `try-catch` por si ocurre alguna interrupción. Por último, imprimo por pantalla los resultados individuales de cada consonante usando sus métodos getters y para terminar, muestro la suma total de todos los caracteres encontrados.
+
+```java
+int sumaTotalCaracteres = 0;
+
+        for (int i = 0; i < 5; i++) {
+            try {
+                hilos[i].join();
+                sumaTotalCaracteres += hilos[i].getRepeticionConstate();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("Hilo interrumpido: " + e.getMessage());
+            }
+        }
+
+        System.out.println("RESULTADOS");
+        for (int i = 0; i < 5; i++) {
+            System.out.println("Constante " + hilos[i].getCons() + ": " + hilos[i].getRepeticionConstate() + " repeticiones.");
+        }
+
+        System.out.println("SUMA TOTAL DE CARACTERES ENCONTRADOS: " + sumaTotalCaracteres);
+```
+
+![resultados.png](Fotos/resultados.png)
