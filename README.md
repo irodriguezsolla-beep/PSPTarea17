@@ -22,7 +22,7 @@ Para la petición de consonantes primero creo un `Scanner` que leerá los inputs
         }
 
 ````
-![bucledepeticiones.png](../Fotos/bucledepeticiones.png)
+![bucledepeticiones.png](Fotos/bucledepeticiones.png)
 
 #### Petición de texto
 Para la petición del texto utilizo el `Scanner` para leer lo que escribe el usuario por el teclado y lo guardo en una variable. Después, instancio la clase `File` para crear o referenciar un archivo llamado `texto.txt`. Para escribir dentro de él de forma segura, abro un bloque `try-with` utilizando un `FileWriter` al que le paso el archivo, esto me permite escribir el texto introducido con  `.write`. Para capturar cualquier posible error de tipo `IOException` si la escritura falla.
@@ -40,7 +40,7 @@ Para la petición del texto utilizo el `Scanner` para leer lo que escribe el usu
             System.out.println("Error");
         }
 `````
-![añadirtexto.png](../Fotos/a%C3%B1adirtexto.png)
+![añadirtexto.png](Fotos/añadirtexto.png)
 
 #### Leer el texto
 
@@ -66,6 +66,6 @@ Por último, una vez que termina de leer todo el archivo, convierto el `StringBu
 
          String textoCompleto = contenido.toString();
 ````
-![Leerhilo.png](../Fotos/Leerhilo.png)
+![Leerhilo.png](Fotos/Leerhilo.png)
 
 
