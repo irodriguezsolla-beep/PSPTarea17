@@ -16,6 +16,7 @@ public class hilo_contador extends Thread {
         int posicion = 0;
 
         while ((posicion = texto.indexOf(cons, posicion)) != -1) {
+
             contador++;
             posicion += cons.length();
         }
@@ -23,7 +24,7 @@ public class hilo_contador extends Thread {
         this.repeticionConstante = contador;
 
     }
-    public int getRepeticionConstate() {
+    public synchronized int getRepeticionConstate() {
         return repeticionConstante;
     }
 
