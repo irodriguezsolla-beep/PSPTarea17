@@ -4,26 +4,42 @@
 Escribe un programa que pida por teclado 5 consonantes y un texto. Cada consonante tendrá un hilo que cuenta cuántas veces aparece una de las consonantes y suma sus apariciones a un contador total compartido. Al final se muestra lo que ha contado cada hilo y el total.
 
 ### Clase hilo_contador
-Para la clase del hilo, creo una clase llamada `hilo_contador` que extiende de `Thread`. Dentro de esta clase defino tres variables: `texto` para guardar el texto completo, `cons` para la consonante que le toca buscar a este hilo, y `repeticionConstante` para almacenar el resultado del conteo. 
+### Clase hilo_contador
 
-En el constructor recibo la consonante y el texto, uso `super("Contador-" + cons);` para ponerle un nombre identificativo al hilo y guardo los valores en las variables de la clase. El método `run()` contiene el código que se ejecuta de forma independiente cuando arranco el hilo, allí inicializo un contador y una posición a cero, y uso un bucle `while` con `texto.indexOf(cons, posicion)` para buscar la consonante en el texto a partir de la posición actual. Si la encuentra, es decir, si no devuelve `-1`, sumo uno al contador y muevo la posición hacia adelante para seguir buscando la siguiente ocurrencia. Cuando ya no quedan más, guardo el resultado final en `this.repeticionConstante`. 
+Para la clase del hilo, creo una clase llamada `hilo_contador` que extiende de `Thread`. Dentro de esta clase defino tres variables de instancia: `texto` para guardar el texto completo, `cons` para la consonante que le toca buscar a este hilo, y `repeticionConstante` para almacenar el resultado del conteo. Además, defino una variable estática llamada `totalCaracteres` inicializada en cero, que sirve como un acumulador global compartido por todas las instancias de la clase.
 
-Por último, defino los métodos getters `getRepeticionConstate` y `getCons`, que los uso para que el programa principal pueda consultar de forma segura el resultado y la letra de cada hilo cuando estos terminen.
+En el constructor recibo la consonante y el texto, uso `super("Contador-" + cons);` para ponerle un nombre identificativo al hilo y guardo los valores en las variables de la clase. Para manipular la variable compartida de forma segura, incluyo los métodos estáticos y sincronizados `sumarAlTotal(int cantidad)`, que incrementa el total acumulado, y `getTotalCaracteres()`, que permite consultar dicho valor global sin problemas de concurrencia.
 
+El método `run()` contiene el código que se ejecuta de forma independiente cuando arranco el hilo. Allí inicializo un contador y una posición a cero, y uso un bucle `while` con `texto.indexOf(cons, posicion)` para buscar la consonante en el texto a partir de la posición actual. Si la encuentra, es decir, si no devuelve `-1`, sumo uno al contador y muevo la posición hacia adelante sumándole la longitud de la consonante (`cons.length()`) para seguir buscando la siguiente ocurrencia. Cuando ya no quedan más, guardo el resultado en `this.repeticionConstante` y ejecuto `sumarAlTotal(contador)` para aportar el conteo de este hilo al total global.
+
+Por último, defino los métodos getters `getRepeticionConstante` (sincronizado) y `getCons`, que los uso para que el programa principal pueda consultar de forma segura el resultado individual y la letra de cada hilo cuando estos terminen.
 ````java
 public class hilo_contador extends Thread {
-    String texto;
-    String cons;
-    int repeticionConstante;
+    private String texto;
+    private String cons;
+    private int repeticionConstante;
 
-    public hilo_contador(String cons, String texto){
+    // Variable compartida por todas las instancias (hilos) de la clase
+    private static int totalCaracteres = 0;
+
+    public hilo_contador(String cons, String texto) {
         super("Contador-" + cons);
         this.cons = cons;
         this.texto = texto;
     }
-    @Override
-    public void run(){
 
+    // Méodo estático y sincronizado para modificar la variable compartida de forma segura
+    public static synchronized void sumarAlTotal(int cantidad) {
+        totalCaracteres += cantidad;
+    }
+
+    // Getter estático para leer el total acumulado por todos los hilos
+    public static synchronized int getTotalCaracteres() {
+        return totalCaracteres;
+    }
+
+    @Override
+    public void run() {
         int contador = 0;
         int posicion = 0;
 
@@ -32,10 +48,14 @@ public class hilo_contador extends Thread {
             posicion += cons.length();
         }
 
+        // Asignación individual del hilo (dentro del méodo run)
         this.repeticionConstante = contador;
 
+        // Suma al acumulador global sincronizado
+        sumarAlTotal(contador);
     }
-    public int getRepeticionConstate() {
+
+    public synchronized int getRepeticionConstante() {
         return repeticionConstante;
     }
 
@@ -44,7 +64,7 @@ public class hilo_contador extends Thread {
     }
 }
 ````
-![hilos.png](Fotos/hilos.png)
+![h2.png](Fotos/h2.png)
 
 ### Clase contador de caracteres
 
@@ -147,7 +167,7 @@ int sumaTotalCaracteres = 0;
             System.out.println("Constante " + hilos[i].getCons() + ": " + hilos[i].getRepeticionConstate() + " repeticiones.");
         }
 
-        System.out.println("SUMA TOTAL DE CARACTERES ENCONTRADOS: " + sumaTotalCaracteres);
+        System.out.println("SUMA TOTAL DE CARACTERES ENCONTRADOS: " + hilo_contador.getTotalCaracteres());
 ```
 
 ![resultados.png](Fotos/resultados.png)

@@ -32,7 +32,7 @@ public class hilo_contador extends Thread {
             posicion += cons.length();
         }
 
-        // Asignación individual del hilo (dentro del méodo run)
+        // Asignación individual del hilo
         this.repeticionConstante = contador;
 
         // Suma al acumulador global sincronizado
