@@ -1,0 +1,1 @@
+Para tener una variable totalCaracteres compartida entre todos los hilos y actualizarla de forma segura, se utiliza una variable estática (static) combinada con un método estático sincronizado (synchronized) o un bloque de sincronización.
